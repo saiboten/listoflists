@@ -16,7 +16,7 @@ interface Props {
   key: any;
   index: number;
   store: (data: UpdateItem) => void;
-  addSublinkAndGoThere: (index: number) => void;
+  addSubLink: (index: number) => void;
 }
 
 interface TitleProps {
@@ -43,7 +43,7 @@ export const DisplayItem: React.FC<Props> = ({
   item,
   index,
   store,
-  addSublinkAndGoThere
+  addSubLink
 }) => {
   const [edit, setEdit] = useState(false);
 
@@ -71,9 +71,7 @@ export const DisplayItem: React.FC<Props> = ({
           <StyledButtonContainer>
             <StyledButton onClick={enableEdit}>Edit</StyledButton>
             {item.link === "" && (
-              <StyledButton onClick={() => addSublinkAndGoThere(index)}>
-                +
-              </StyledButton>
+              <StyledButton onClick={() => addSubLink(index)}>+</StyledButton>
             )}
           </StyledButtonContainer>
         </StyledListElement>

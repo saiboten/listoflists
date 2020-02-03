@@ -1,7 +1,12 @@
-import firebase from "firebase";
-require("firebase/firestore");
+import * as firebaseApp from "firebase/app";
 
-const firebaseConfig = {
+// These imports load individual services into the firebase namespace.
+import "firebase/auth";
+import "firebase/firestore";
+
+export const googleAuthProvider = new firebaseApp.auth.GoogleAuthProvider();
+
+const config = {
   apiKey: "AIzaSyBsfq4N_HHnKqiy9nZLdWmLGP3sQRhdya4",
   authDomain: "randomize-77c15.firebaseapp.com",
   databaseURL: "https://randomize-77c15.firebaseio.com",
@@ -12,6 +17,6 @@ const firebaseConfig = {
   measurementId: "G-EKFFZ7BPYC"
 };
 
-firebase.initializeApp(firebaseConfig);
+firebaseApp.initializeApp(config);
 
-export { firebase };
+export { firebaseApp as firebase };

@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { firebase } from "./firebase";
 
 import { ListItems } from "./ListItems";
+import { Login } from "./Login";
 
 const Global = createGlobalStyle`
 
@@ -30,20 +32,44 @@ const App: React.FC = () => {
     <StyledApp>
       <Global />
       <Router>
-        <div>
-          {/* A <Switch> looks through its children <Route>s and
-            renders the first one that matches the current URL. */}
-          <Switch>
-            <Route path="/:id">
-              <ListItems />
-            </Route>
-            <Route path="/">
-              <ListItems />
-            </Route>
-          </Switch>
-        </div>
+        <AppRouter />
       </Router>
     </StyledApp>
+  );
+};
+
+const AppRouter: React.FC = () => {
+  const [user, setUser] = useState<firebase.User | null>(null);
+  const [loginStatusClarified, setLoginStatusClarified] = useState(false);
+
+  useEffect(() => {
+    let unsubAuthChange = firebase.auth().onAuthStateChanged(user => {
+      setLoginStatusClarified(true);
+      setUser(user);
+    });
+
+    return () => {
+      unsubAuthChange();
+    };
+  }, [user]);
+
+  if (!loginStatusClarified) {
+    return <div>Loading</div>;
+  }
+
+  if (!user) {
+    return <Login />;
+  }
+
+  return (
+    <Switch>
+      <Route path="/:id">
+        <ListItems user={user} />
+      </Route>
+      <Route path="/">
+        <ListItems user={user} />
+      </Route>
+    </Switch>
   );
 };
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Redirect, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import { DisplayItem } from "./DisplayItem";
 import { Header } from "./Header";
@@ -33,23 +33,38 @@ const StyledBackLink = styled(Link)`
   top: 1rem;
 `;
 
-export const ListItems: React.FC = () => {
+const collectionName = "lists";
+
+interface Props {
+  user: firebase.User;
+}
+
+export const ListItems: React.FC<Props> = ({ user }) => {
   let { id } = useParams();
   const [document, setDocument] = useState<Document>(EmptyDocument);
   const [loading, setLoading] = useState(false);
-  const [nextLocation, setNextLocation] = useState();
 
-  const documentId = id || "top";
+  const documentId = id || user.uid;
 
   useEffect(() => {
     setLoading(true);
     setDocument(EmptyDocument);
     const db = firebase.firestore();
-    db.collection("items")
+    const unsub = db
+      .collection(collectionName)
       .doc(documentId)
-      .get()
-      .then(doc => {
+      .onSnapshot(doc => {
         setLoading(false);
+
+        if (!doc.exists) {
+          db.collection(collectionName)
+            .doc(documentId)
+            .set({
+              items: [],
+              owner: user.uid
+            });
+        }
+
         const docData = doc.data();
 
         const document = {
@@ -61,18 +76,18 @@ export const ListItems: React.FC = () => {
 
         setDocument(document);
       });
-  }, [documentId]);
+    return () => {
+      unsub();
+    };
+  }, [documentId, user.uid]);
 
   function addBlankItem() {
-    const newItemList = [
-      ...(document?.items || []),
-      { name: "Blank", link: "" }
-    ];
+    const newItemList = [...(document?.items || []), { name: "", link: "" }];
 
     const db = firebase.firestore();
-    db.collection("items")
+    db.collection(collectionName)
       .doc(documentId)
-      .set({
+      .update({
         items: newItemList
       });
     setDocument({ ...document, items: newItemList });
@@ -83,40 +98,33 @@ export const ListItems: React.FC = () => {
     arrayCopy[input.index].name = input.value;
 
     const db = firebase.firestore();
-    db.collection("items")
+    db.collection(collectionName)
       .doc(documentId)
       .update({
         items: arrayCopy
       });
   }
 
-  function addSublinkAndGoThere(index: number) {
+  function addSubLink(index: number) {
     const db = firebase.firestore();
 
-    db.collection("items")
+    db.collection(collectionName)
       .add({
         items: [],
-        parent: documentId === "top" ? "" : documentId,
-        parentTopic: document?.items[index].name || "ops"
+        parent: documentId === user.uid ? "" : documentId,
+        parentTopic: document?.items[index].name || "ops",
+        owner: user.uid
       })
       .then((docRef: any) => {
         const copy = [...(document?.items || [])];
         copy[index].link = docRef.id;
 
-        db.collection("items")
+        db.collection(collectionName)
           .doc(documentId)
           .update({
             items: copy
-          })
-          .then(() => {
-            setNextLocation(`/${docRef.id}`);
           });
       });
-  }
-
-  if (nextLocation) {
-    setNextLocation(null);
-    return <Redirect to={nextLocation} />;
   }
 
   if (loading) {
@@ -136,7 +144,7 @@ export const ListItems: React.FC = () => {
             item={item}
             index={index}
             store={store}
-            addSublinkAndGoThere={addSublinkAndGoThere}
+            addSubLink={addSubLink}
           />
         ))}
       </StyledUl>
