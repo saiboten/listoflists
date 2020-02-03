@@ -1,0 +1,10 @@
+{
+  "apps": [
+    {
+      "name": "ListOfLists",
+      "script": "npx",
+      "interpreter": "none",
+      "args": "serve -p 3011 build/"
+    }
+  ]
+}
