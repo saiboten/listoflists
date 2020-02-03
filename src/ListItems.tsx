@@ -8,6 +8,8 @@ import { useParams } from "react-router-dom";
 import { Item, UpdateItemParams } from "./types";
 import { StyledButton } from "./StyledButton";
 import styled from "styled-components";
+import { StyledPlusIcon } from "./Icons/StyledPlusIcon";
+import { StyledBackIcon } from "./Icons/StyledBackIcon";
 
 interface Document {
   items: Item[];
@@ -128,12 +130,12 @@ export const ListItems: React.FC<Props> = ({ user }) => {
   }
 
   if (loading) {
-    return <>Laster</>;
+    return <></>;
   }
 
   return (
-    <div style={{ position: "relative" }}>
-      <Header>
+    <div style={{ position: "relative", marginTop: "1rem" }}>
+      <Header style={{ marginBottom: "1rem" }}>
         {document.parentTopic !== "" ? document.parentTopic : "Lister"}
       </Header>
 
@@ -148,9 +150,13 @@ export const ListItems: React.FC<Props> = ({ user }) => {
           />
         ))}
       </StyledUl>
-      <StyledButton onClick={addBlankItem}>+</StyledButton>
+      <StyledButton onClick={addBlankItem}>
+        <StyledPlusIcon />
+      </StyledButton>
       {id !== undefined && (
-        <StyledBackLink to={document.parent}>Tilbake</StyledBackLink>
+        <StyledBackLink to={document.parent}>
+          <StyledBackIcon />
+        </StyledBackLink>
       )}
     </div>
   );

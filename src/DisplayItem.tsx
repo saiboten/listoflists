@@ -5,6 +5,14 @@ import styled from "styled-components";
 import { StyledListElement } from "./StyledListElement";
 import { EditItem } from "./EditItem";
 import { StyledButton } from "./StyledButton";
+import { ReactComponent as ChangeIcon } from "./Icons/change.svg";
+import { StyledPlusIcon } from "./Icons/StyledPlusIcon";
+
+const StyledChangeIcon = styled(ChangeIcon)`
+  width: 32px;
+  height: 32px;
+  transform: translateX(5px) translateY(5px);
+`;
 
 interface UpdateItem {
   index: number;
@@ -69,9 +77,13 @@ export const DisplayItem: React.FC<Props> = ({
             <StyledName>{item.name}</StyledName>
           )}
           <StyledButtonContainer>
-            <StyledButton onClick={enableEdit}>Edit</StyledButton>
+            <StyledButton onClick={enableEdit}>
+              <StyledChangeIcon />
+            </StyledButton>
             {item.link === "" && (
-              <StyledButton onClick={() => addSubLink(index)}>+</StyledButton>
+              <StyledButton onClick={() => addSubLink(index)}>
+                <StyledPlusIcon />
+              </StyledButton>
             )}
           </StyledButtonContainer>
         </StyledListElement>

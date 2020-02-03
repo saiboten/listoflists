@@ -5,7 +5,7 @@ export const StyledListElement = styled.li`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5rem;
+  padding: 1.5rem;
   background-color: #eae7d6;
 
   &:nth-child(2n) {

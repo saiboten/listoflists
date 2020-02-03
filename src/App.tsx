@@ -16,9 +16,13 @@ const Global = createGlobalStyle`
     box-sizing: inherit;
 }
 
+html {
+  font-size: 62.5%; // 1 rem == 10px
+}
 
 body {
-
+  box-sizing: border-box;
+  font-size: 2rem;
 }`;
 
 const StyledApp = styled.div`
