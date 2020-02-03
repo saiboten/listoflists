@@ -84,15 +84,24 @@ export const ListItems: React.FC<Props> = ({ user }) => {
   }, [documentId, user.uid]);
 
   function addBlankItem() {
-    const newItemList = [...(document?.items || []), { name: "", link: "" }];
+    const newItemListForFirebase = [
+      ...(document?.items || []),
+      { name: "", link: "" }
+    ];
 
     const db = firebase.firestore();
     db.collection(collectionName)
       .doc(documentId)
       .update({
-        items: newItemList
+        items: newItemListForFirebase
       });
-    setDocument({ ...document, items: newItemList });
+
+    const newItemListLocally = [
+      ...(document?.items || []),
+      { name: "", link: "", edit: true }
+    ];
+
+    setDocument({ ...document, items: newItemListLocally });
   }
 
   function store(input: UpdateItemParams) {
@@ -147,6 +156,7 @@ export const ListItems: React.FC<Props> = ({ user }) => {
             index={index}
             store={store}
             addSubLink={addSubLink}
+            editDefault={item.edit}
           />
         ))}
       </StyledUl>

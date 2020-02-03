@@ -1,6 +1,7 @@
 export type Item = {
   name: string;
   link: string?;
+  edit: bool?;
 };
 
 export type ItemDoc = {

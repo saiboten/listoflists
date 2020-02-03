@@ -25,6 +25,7 @@ interface Props {
   index: number;
   store: (data: UpdateItem) => void;
   addSubLink: (index: number) => void;
+  editDefault: boolean;
 }
 
 interface TitleProps {
@@ -51,9 +52,10 @@ export const DisplayItem: React.FC<Props> = ({
   item,
   index,
   store,
-  addSubLink
+  addSubLink,
+  editDefault
 }) => {
-  const [edit, setEdit] = useState(false);
+  const [edit, setEdit] = useState(editDefault);
 
   function cancel() {
     setEdit(false);
