@@ -5,14 +5,8 @@ import styled from "styled-components";
 import { StyledListElement } from "./StyledListElement";
 import { EditItem } from "./EditItem";
 import { StyledButton } from "./StyledButton";
-import { ReactComponent as ChangeIcon } from "./Icons/change.svg";
 import { StyledPlusIcon } from "./Icons/StyledPlusIcon";
-
-const StyledChangeIcon = styled(ChangeIcon)`
-  width: 32px;
-  height: 32px;
-  transform: translateX(5px) translateY(5px);
-`;
+import { StyledLinkIcon } from "./Icons/StyledLinkIcon";
 
 interface UpdateItem {
   index: number;
@@ -32,8 +26,15 @@ interface TitleProps {
   readonly isActive: boolean;
 }
 
-const StyledName = styled.div`
+const StyledName = styled.button`
   flex: 1;
+  padding: 1rem;
+  width: 100%;
+  text-align: center;
+  font-size: 2rem;
+  background-color: inherit;
+  outline: none;
+  border: none;
 `;
 
 const StyledButtonContainer = styled.div`
@@ -73,15 +74,13 @@ export const DisplayItem: React.FC<Props> = ({
         </StyledListElement>
       ) : (
         <StyledListElement>
-          {item.link !== "" ? (
-            <StyledLink to={`/${item.link}`}>{item.name}</StyledLink>
-          ) : (
-            <StyledName>{item.name}</StyledName>
-          )}
+          <StyledName onClick={enableEdit}>{item.name}</StyledName>
           <StyledButtonContainer>
-            <StyledButton onClick={enableEdit}>
-              <StyledChangeIcon />
-            </StyledButton>
+            {item.link !== "" && (
+              <StyledLink to={`/${item.link}`}>
+                <StyledLinkIcon />
+              </StyledLink>
+            )}
             {item.link === "" && (
               <StyledButton onClick={() => addSubLink(index)}>
                 <StyledPlusIcon />
